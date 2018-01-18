@@ -51,6 +51,21 @@ def add_increase_col(path=None, data: pd.DataFrame = None):
     return data
 
 
+def process_normalization(path=None, data: pd.DataFrame = None, useful_colmns=None):
+    if path is None and data is None:
+        raise AssertionError('two parameters can not be blank at the same time.')
+    if path:
+        data = pd.read_csv(path)
+    data = date2weekday(data=data)
+    # ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Market Cap', 'Weekday']
+    data = add_increase_col(data=data)
+    data = data[useful_colmns]
+    return normalize_data(data=data)
+
+
 if __name__ == '__main__':
-    add_increase_col(data=date2weekday('../data/bitcoin-20130428-20180113.csv'))
+    # add_increase_col(data=date2weekday('../data/bitcoin-20130428-20180113.csv'))
     # date2weekday('../data/bitcoin-20130428-20180113.csv')
+    process_normalization(path='../data/bitcoin-20130428-20180113.csv',
+                          useful_colmns=['Open', 'High', 'Low', 'Close', 'Volume',
+                                         'Market Cap', 'Weekday', 'Increase'])
