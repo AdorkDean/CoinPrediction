@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 
-def generate_batchs(data: pd.DataFrame, window_len=10, colmns=None):
+def generate_batchs(data: pd.DataFrame, window_len=10, output_colmns=None):
     '''
     每window_len天的输入作为一个输入
     :param data:
@@ -13,10 +13,13 @@ def generate_batchs(data: pd.DataFrame, window_len=10, colmns=None):
     '''
     input_tmp = list()
     output_tmp = list()
+    # 每一个数据为[window_len, features]
     for i in range(len(data) - window_len - 1):
         input_tmp.append(np.array(data[i:(i + window_len)].copy()))
-        if colmns:
-            output_tmp.append(np.array(data.iloc[i + window_len + 1].copy()[colmns]))
+
+        # 将output_colmns 作为输出结果
+        if output_colmns:
+            output_tmp.append(np.array(data.iloc[i + window_len + 1].copy()[output_colmns]))
         else:
             output_tmp.append(np.array(data.iloc[i + window_len + 1].copy()))
     inputs = np.array(input_tmp)
