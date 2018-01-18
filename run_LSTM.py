@@ -6,6 +6,7 @@ from util import preprocessing_data
 from model import LSTM
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 DATA_PATH = 'data/bitcoin-20130428-20180113.csv'
 RANDOM_SEED = 188
@@ -14,6 +15,7 @@ RANDOM_SEED = 188
 def main():
     np.random.seed(RANDOM_SEED)  # 方便结果重现
     data = preprocessing_data.date2weekday(DATA_PATH)
+    data = data[['Open', 'High', 'Low', 'Close', 'Volume', 'Market Cap', 'Weekday']]
     data = preprocessing_data.add_increase_col(data=data)
     # data = preprocessing_data.normalize_data(data=data,
     #                                          colmns=['Weekday', 'High', 'Low', 'Volume', 'Market Cap', 'Close'])
