@@ -3,6 +3,7 @@
 import datetime
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import MinMaxScaler
 
 
 def date2weekday(path=None, data: pd.DataFrame = None):
@@ -32,13 +33,9 @@ def normalize_data(path=None, data: pd.DataFrame = None, colmns: list = None):
         raise AssertionError('two parameters can not be blank at the same time.')
     if path:
         data = pd.read_csv(path)
-
-    if colmns:
-        for colmn in colmns:
-            data[colmns] = data[colmns].apply(lambda x: (x - np.min(x)) / (np.max(x) - np.min(x)))
-    else:
-        data = data.apply(lambda x: (x - np.min(x)) / (np.max(x) - np.min(x)))
-    return data
+    scaler = MinMaxScaler()
+    data = scaler.fit_transform(data)
+    return scaler, data
 
 
 def add_increase_col(path=None, data: pd.DataFrame = None):
@@ -60,7 +57,7 @@ def process_normalization(path=None, data: pd.DataFrame = None, useful_colmns=No
     # ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Market Cap', 'Weekday']
     data = add_increase_col(data=data)
     data = data[useful_colmns]
-    return normalize_data(data=data)
+    return normalize_data(data=data, colmns=useful_colmns)
 
 
 if __name__ == '__main__':
